@@ -5,25 +5,26 @@
 #define BIT_SET(reg, bit) (reg |= (1 << bit))
 
 void setup() {
-    DDRB |= (1 << PB1);
+	BIT_SET(DDRB, PB1);
     
     TCCR1A = 0;
-    BIT_SET(TCCR1A, COM1A0);
-    BIT_CLEAR(TCCR1A, COM1A1);
+	OCR1A = 6553;
+	ICR1 = 65535;
 
-	// fast PWM : 14
+	BIT_SET(TCCR1A, COM1A1);
+	BIT_CLEAR(TCCR1A, COM1A0);
+
+	// fast pwm : 14
     BIT_CLEAR(TCCR1A, WGM10);
     BIT_SET(TCCR1A, WGM11);
+
     BIT_SET(TCCR1B, WGM12);
     BIT_SET(TCCR1B, WGM13);
 
-    BIT_SET(TCCR1B, CS12);
-    BIT_CLEAR(TCCR1B, CS11);
-    BIT_CLEAR(TCCR1B, CS10);
-
-    OCR1A = 31250;
-
-    TCNT1 = 0;
+	// prescaller
+	BIT_CLEAR(TCCR1B, CS10);
+	BIT_CLEAR(TCCR1B, CS11);
+	BIT_SET(TCCR1B, CS12);
 }
 
 int main(void) {
