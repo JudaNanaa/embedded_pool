@@ -4,16 +4,18 @@
 
 #define BAUD_PRESCALER ((F_CPU / (16UL * BAUDRATE)))
 
+#define ENTER_LOGIN "Enter your login:\r\n"
 #define USERNAME "Moussa"
 #define PASSWORD "test"
-#define ENTER_USERNAME "Enter Username: "
-#define ENTER_PASSWORD "Enter Password: "
+#define ENTER_USERNAME "	username: "
+#define ENTER_PASSWORD "	password: "
 #define ENTER 13
 #define BACKSPACE 127
 #define USERNAME_TOO_LONG "\r\nUsername can be max 100 characters!\r\n"
 #define PASSWORD_TOO_LONG "\r\nPassword can be max 100 characters!\r\n"
-#define ACCESS_DENIED "\r\nAccess Denied. Try again.\r\n"
-#define ACCESS_GRANTED "\r\nWelcome, Moussa!\r\n"
+#define ACCESS_DENIED "Bad combination username/password\r\n\r\n"
+#define ACCESS_GRANTED "\r\nHello Moussa!\r\n"
+#define PLAY_GAME "Shall we play a game?\r\n"
 
 void uart_init() {
     UBRR0H = BAUD_PRESCALER >> 8;
@@ -58,12 +60,13 @@ int get_prompt(char *buff, bool echo ,const char *message_on_error) {
                 i--;
                 uart_printstr("\b \b");
             }
-        } else {
+        }
+		else {
             buff[i++] = c;
 			if (echo == true)
             	uart_tx(c);
 			else
-				uart_tx('x');
+				uart_tx('*');
         }
     }
     uart_printstr(message_on_error);
@@ -109,6 +112,7 @@ void login() {
     char buffer_password[100];
 
     while (true) {
+		uart_printstr(ENTER_LOGIN);
         uart_printstr(ENTER_USERNAME);
 		if (get_prompt(buffer_username, true, USERNAME_TOO_LONG) == -1) {
             continue;
@@ -134,6 +138,7 @@ void login() {
 int main(void) {
     uart_init();
     login();
+	uart_printstr(PLAY_GAME);
     while (1) {
     }
     return 0;
