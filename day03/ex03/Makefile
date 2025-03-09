@@ -31,7 +31,7 @@ OBJCOPY_FLAGS = -O ihex
 SRCS_DIR = src/
 
 # Source files (adding 'main.c' from 'src/' directory)
-SRCS = $(addprefix $(SRCS_DIR), main.c)
+SRCS = $(addprefix $(SRCS_DIR), main.c uart.c hexa.c utils.c rgb.c)
 
 # Output binary file name
 BINFILE = main.bin
@@ -41,6 +41,9 @@ HEXFILE = main.hex
 
 # Default target: build HEX file and flash the microcontroller
 all: hex flash
+
+screen : all 
+	screen $(PORT) $(BAUDRATE)
 
 # Target to flash the microcontroller using avrdude
 flash:
